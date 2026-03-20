@@ -6,6 +6,7 @@ public class Trainconsistmanagementapp {
         bogieCapacity.put("Sleeper", 72);
         bogieCapacity.put("AC Chair", 60);
         bogieCapacity.put("First Class", 40);
+        bogieCapacity.put("Cargo", 100);
         for (Map.Entry<String, Integer> entry : bogieCapacity.entrySet()) {
             System.out.println(entry.getKey() + " Capacity: " + entry.getValue());
         }
