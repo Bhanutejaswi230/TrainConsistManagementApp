@@ -1,44 +1,51 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 public class Trainconsistmanagementapp {
-    static class GoodsBogie {
+    static class Bogie {
         String type;
-        String cargo;
-        GoodsBogie(String type, String cargo) {
+        int capacity;
+        Bogie(String type, int capacity) {
             this.type = type;
-            this.cargo = cargo;
+            this.capacity = capacity;
         }
-        public String getType() {
-            return type;
-        }
-        public String getCargo() {
-            return cargo;
+        public int getCapacity() {
+            return capacity;
         }
         public String toString() {
-            return type + " Bogie carrying " + cargo;
+            return type + " Bogie - Capacity: " + capacity;
         }
-    }
-    // UC12 Safety Validation using Streams
-    public static boolean checkSafetyCompliance(List<GoodsBogie> bogies) {
-        return bogies.stream()
-                .allMatch(bogie ->
-                        !bogie.getType().equalsIgnoreCase("Cylindrical")
-                                || bogie.getCargo().equalsIgnoreCase("Petroleum")
-                );
     }
     public static void main(String[] args) {
-        List<GoodsBogie> bogies = new ArrayList<>();
-        bogies.add(new GoodsBogie("Cylindrical", "Petroleum"));
-        bogies.add(new GoodsBogie("Open", "Coal"));
-        bogies.add(new GoodsBogie("Box", "Grain"));
-        System.out.println("Goods Bogies:");
-        bogies.forEach(System.out::println);
-        boolean isSafe = checkSafetyCompliance(bogies);
-        System.out.println("\nSafety Compliance Status: " + isSafe);
-        if (isSafe) {
-            System.out.println("Train formation is SAFE.");
-        } else {
-            System.out.println("Train formation is UNSAFE.");
+        List<Bogie> bogies = new ArrayList<>();
+        bogies.add(new Bogie("Sleeper", 72));
+        bogies.add(new Bogie("AC Chair", 56));
+        bogies.add(new Bogie("First Class", 40));
+        bogies.add(new Bogie("General", 90));
+        bogies.add(new Bogie("Sleeper", 65));
+        bogies.add(new Bogie("AC Chair", 58));
+        bogies.add(new Bogie("Sleeper", 75));
+        long loopStart = System.nanoTime();
+        List<Bogie> loopFiltered = new ArrayList<>();
+        for (Bogie b : bogies) {
+            if (b.getCapacity() > 60) {
+                loopFiltered.add(b);
+            }
         }
+        long loopEnd = System.nanoTime();
+        long loopTime = loopEnd - loopStart;
+        long streamStart = System.nanoTime();
+        List<Bogie> streamFiltered =
+                bogies.stream()
+                        .filter(b -> b.getCapacity() > 60)
+                        .collect(Collectors.toList());
+        long streamEnd = System.nanoTime();
+        long streamTime = streamEnd - streamStart;
+        System.out.println("Loop Filtered Bogies:");
+        loopFiltered.forEach(System.out::println);
+        System.out.println("\nStream Filtered Bogies:");
+        streamFiltered.forEach(System.out::println);
+        System.out.println("\nLoop Execution Time: " + loopTime + " ns");
+        System.out.println("Stream Execution Time: " + streamTime + " ns");
     }
 }
